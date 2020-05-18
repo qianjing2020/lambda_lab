@@ -18,16 +18,12 @@ class TimeBasedCV(object):
         possible values designed to be used by dateutil.relativedelta class
         deafault is days
     '''
-    
-    
     def __init__(self, train_period=30, test_period=7, freq='days'):
         self.train_period = train_period
         self.test_period = test_period
-        self.freq = freq
-
+        self.freq = freq 
         
-        
-    def split(self, data, validation_split_date=None, date_column='record_date', gap=0):
+    def split(self, data, validation_split_date=None, date_column='index', gap=0):
         '''
         Generate indices to split data into training and test set
         
