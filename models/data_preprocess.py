@@ -1,35 +1,38 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
+import copy
 
 class DataCleaning:
     # method to clean data, apply to the whole data set (mixed time series)
-    def __init__(self, data=None):
+    def __init__(self, input_data=None):
         if data is None:
             data = {}
             print("No data provided")
         if isinstance(data, pd.DataFrame) == False:
             print("Data need to be formated as pandas dataframe")
-        self.description = "Methods to clean market price dataframe."
-        self.data = data
+        self.description = '''Methods to clean market price dataframe.'''
+        self.data = input_data
+        print(self.data.columns.tolist())
+        status = isinstance(self.data, pd.DataFrame)
+        print(f'Class initiating return {status}.')
     
     def simplify_header(self):
         # remove capital letter, parentheses in columns header
-        df = self.copy()
-        df = df.rename(columns = lambda x: x.lower())
+    
+        df = self.data.rename(columns = lambda x: x.lower())
         cols = df.columns.tolist()
         df = df.rename(columns={cols[-3]: 'retail', cols[-2]: 'wholesale'})
         print(f'column header renamed {df.columns.tolist()}')
-        
+        self.data = df
         return df 
 
     def clean_entry(self):
         # clean all invalid entries
-        df = self.copy()
+        #df = self.data.copy()
         # cost cannot be 0, replace zeros with NaN
         cols = ['wholesale', 'retail']
-        df[cols] = df[cols].replace({0: np.nan})
+        df[cols] = self.data[cols].replace({0: np.nan})
         if np.prod(df['wholesale'] != 0):
             print('All zero values has been replaced with NaN successfually')
         else:
@@ -38,12 +41,12 @@ class DataCleaning:
         str_to_remove_list = ['Wholesale', 'retail','NaN']
         df[df['wholesale'].isin(str_to_remove_list)] = np.NaN
         df[df['retail'].isin(str_to_remove_list)] = np.NaN
-        
+        self.data = df
         return df
 
     def convert_dtypes(self):
         # change each column to desired data type
-        df = self.copy()
+        df = copy.copy(self)
         # change date to datetime
         df['date'] = pd.to_datetime(df['date'])
 
@@ -57,7 +60,7 @@ class DataCleaning:
             df[item] = df[item].astype('category')
         
         print('Data type converted. Numericals converted to float, date to datatime type, and non-numericals to category.')
-        
+        self.data = df
         return df
 
       
