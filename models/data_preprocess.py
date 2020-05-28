@@ -2,39 +2,43 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import copy
+pd.set_option('display.max_columns', 20)
 
 class DataCleaning:
-    # method to clean data, apply to the whole data set (mixed time series)
+    """ method to clean data, apply to the whole data set (mixed time series)"""
     def __init__(self, input_data=None):
-        if data is None:
-            data = {}
+
+        if input_data is None:
+            self.data = {}
             print("No data provided")
-        if isinstance(data, pd.DataFrame) == False:
+        if isinstance(input_data, pd.DataFrame) == False:
             print("Data need to be formated as pandas dataframe")
-        self.description = '''Methods to clean market price dataframe.'''
         self.data = input_data
         print(self.data.columns.tolist())
         status = isinstance(self.data, pd.DataFrame)
         print(f'Class initiating return {status}.')
     
-    def simplify_header(self):
-        # remove capital letter, parentheses in columns header
+    '''def simplify_header(self):
+        """remove capital letter, parentheses in columns header"""
     
-        df = self.data.rename(columns = lambda x: x.lower())
+        df = self.data.rename(columns=lambda x: x.lower())
+        print(df.head())
         cols = df.columns.tolist()
         df = df.rename(columns={cols[-3]: 'retail', cols[-2]: 'wholesale'})
+        print(df.head())
         print(f'column header renamed {df.columns.tolist()}')
         self.data = df
-        return df 
+        return df '''
 
     def clean_entry(self):
         # clean all invalid entries
-        #df = self.data.copy()
         # cost cannot be 0, replace zeros with NaN
+        df = self.data.copy()
         cols = ['wholesale', 'retail']
-        df[cols] = self.data[cols].replace({0: np.nan})
+        
+        df[cols] = df[cols].replace({0: np.nan})
         if np.prod(df['wholesale'] != 0):
-            print('All zero values has been replaced with NaN successfually')
+            print('All zero values has been replaced with NaN successfully')
         else:
             print('Zero to NaN process not complete.')
         # remove str in wholesale retail columns

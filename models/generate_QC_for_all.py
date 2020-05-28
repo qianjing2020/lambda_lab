@@ -22,10 +22,10 @@ print(raw_data.head())
 
 df0 = raw_data.copy()
 # clean data
-df = DataCleaning(raw_data)
-df = df.simplify_header()
-df = DataCleaning.clean_entry(df)
-df = df.convert_dtypes()
+dc = DataCleaning(df0)
+
+df = dc.clean_entry()
+df = dc.convert_dtypes()
 
 print(df.head())
 
