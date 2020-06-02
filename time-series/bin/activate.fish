@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/jing/Documents/LambdaSchool/lab/time-series"
+set -gx VIRTUAL_ENV "/Users/jing/Documents/LambdaSchool/lambda_lab/time-series"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

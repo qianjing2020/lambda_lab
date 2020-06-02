@@ -1,4 +1,4 @@
-#!/Users/jing/Documents/LambdaSchool/lab/time-series/bin/python3
+#!/Users/jing/Documents/LambdaSchool/lambda_lab/time-series/bin/python3.8
 """
 Download and install a CmdStan release from GitHub.
 Optional command line arguments:

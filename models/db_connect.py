@@ -16,6 +16,7 @@ class dbConnect:
         self.df = [] # create an empy dataframe
     
     def read_stakeholder_db(self):
+        # read data from specific table in stakeholder's db
         db_URI = 'mysql+pymysql://' + stakeholder_db_user + ':' + \
             stakeholder_db_password + '@' + stakeholder_db_host + '/' + stakeholder_db_name
         engine = create_engine(db_URI)    
@@ -24,9 +25,10 @@ class dbConnect:
             "SELECT * FROM platform_market_prices2", con=engine)        
         return data
     
-    
 
-    def initiate_analytical_db(self, df):
+    def populate_analytical_db(self, df, tablename):
+        # populate AWS analytical db 
+        # input df, tablename 
         con = psycopg2.connect(
             user=aws_db_user,
             host=aws_db_host,
@@ -35,13 +37,13 @@ class dbConnect:
             password=aws_db_password)
         db_URI = 'postgresql://' + aws_db_user + ':' + aws_db_password + '@' + aws_db_host + '/' + aws_db_name
         engine = create_engine(db_URI)
-        tablename = self.name.lower()
-
-        df.to_sql(tablename, con=engine, if_exist='replace', index=False, chuncksize=100)
+        
+        df.to_sql(tablename, con=engine, if_exists='replace', index=False, chunksize=100)
         con.commit()
         con.close()
 
     def migrate_analyticalDB(self):
+        # read/add newly added data only
         pass #raw = read_stakeholderDB()
 
 
