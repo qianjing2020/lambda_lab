@@ -1,15 +1,14 @@
-### Design a composite quality index to determine time series quality for forecasting
+"""Design a composite quality index to determine time series quality for forecasting"""
 import numpy as np
 import pandas as pd
 
-from datetime import datetime, date
 import matplotlib.pyplot as plt
 import seaborn as sns
-from db_connect import dbConnect
-
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, OneHotEncoder
 from sklearn.pipeline import make_pipeline
 from sklearn.compose import ColumnTransformer
+
+from db_connect import dbConnect
 
 # get qc table
 db_c = dbConnect()

@@ -21,8 +21,8 @@ class DataCleaning:
         return df
               
     def remove_zeros(self, data):
-        # clean all invalid entries
-        # cost cannot be 0, replace zeros with NaN
+        """clean all invalid entries
+        cost cannot be 0, replace zeros with NaN"""
         df = data.copy()
         cols = ['wholesale', 'retail']
         
@@ -31,18 +31,15 @@ class DataCleaning:
             print('All zero values has been replaced with NaN successfully')
         else:
             print('Zero to NaN process not complete.')
-        return df
-    
-    """         
+        return df    
+          
         # # remove str in wholesale retail columns
         # str_to_remove_list = ['Wholesale', 'retail','NaN']
         # df[df['wholesale'].isin(str_to_remove_list)] = np.NaN
-        # df[df['retail'].isin(str_to_remove_list)] = np.NaN
-        return df
-    """    
+        # df[df['retail'].isin(str_to_remove_list)] = np.NaN       
 
     def convert_dtypes(self, data):
-        # change each column to desired data type
+        """change each column to desired data type"""
         df = data.copy()
         # # change date to datetime
         # df['date'] = pd.to_datetime(df['date'])
@@ -62,7 +59,7 @@ class DataCleaning:
      
 
 class DataQualityCheck:
-    # contain methods for quality check for one time series
+    """contain methods for quality check for one time series"""
     def __init__(self):
         pass
     
@@ -76,20 +73,30 @@ class DataQualityCheck:
         return df
         
     def remove_duplicates(self, df):
-        # remove duplicated rows, keep the first
-        df = df.copy()
-        rows_rm = df.index.duplicated(keep='first')
+        """remove duplicated rows, keep the first"""
+        y = df.copy()
+        rows_rm = y.index.duplicated(keep='first')
         if np.sum(rows_rm):
-            df = df[~rows_rm]
-        return df
+            y = y[~rows_rm]
+        return y
         
     def remove_outliers(self, df):
-        #remove outliers from a series
-        
+        """remove outliers from a series"""        
         y = df.copy()
         lower_bound, upper_bound = y.quantile(.05), y.quantile(.95)
         y = y[y.iloc[:,0].between(lower_bound[0], upper_bound[0])]
         return y
+
+    def day_by_day(self, df):
+        """construct time frame and create augumented time series"""
+        y = df.copy()
+        START, END = y.index.min(), y.index.max()        
+        # construct a time frame from start to end
+        date_range = pd.date_range(start=START, end=END, freq='D')
+        time_df = pd.DataFrame([], index=date_range)
+        # this is time series framed in the complete day-by-day timeframe
+        y_t = time_df.merge(y, how='left', left_index=True, right_index=True)
+        return y_t
 
     def generate_QC(self, df, figure_output=0):
         """ 
@@ -112,13 +119,9 @@ class DataQualityCheck:
         # construct time frame and create augumented time series
         START, END = y.index.min(), y.index.max()
         TIMELINESS = (datetime.now()-END).days
-
-        # construct a time frame from start to end
-        date_range = pd.date_range(start=START, end=END, freq='D')
-        time_df = pd.DataFrame([], index=date_range)
-
+        
         # this is time series framed in the complete day-by-day timeframe
-        y_t = time_df.merge(y, how='left', left_index=True, right_index=True)
+        y_t = day_by_day(y) 
 
         # completeness
         L = len(y_t)

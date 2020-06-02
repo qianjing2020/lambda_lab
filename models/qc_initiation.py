@@ -35,7 +35,6 @@ print('data cleaned')
 # instantiate qc class
 qc = DataQualityCheck()
 
-
 # Data quality dimension
 col_names = ['market', 'product', 'source', 'start', 'end', 'timeliness', 'data_length', 'completeness', 'duplicates', 'mode_D']
 
@@ -59,7 +58,7 @@ for MARKET in MARKET_LIST:
         for SOURCE in SOURCE_LIST:
             
             # apply filters
-            cond1 = (df['product_agg']==PRODUCT)
+            cond1 = (df['product']==PRODUCT)
             cond2 = (df['source']==SOURCE)
             cond3 = (df['market']==MARKET)
                         
