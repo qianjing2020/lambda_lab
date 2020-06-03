@@ -116,12 +116,14 @@ class DataQualityCheck:
 
         """
         y = df.copy()
+        y = self.remove_duplicates(y)
+        y = self.remove_outliers(y)
         # construct time frame and create augumented time series
         START, END = y.index.min(), y.index.max()
         TIMELINESS = (datetime.now()-END).days
         
         # this is time series framed in the complete day-by-day timeframe
-        y_t = day_by_day(y) 
+        y_t = self.day_by_day(y) 
 
         # completeness
         L = len(y_t)

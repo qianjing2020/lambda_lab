@@ -31,13 +31,6 @@ df = dc.remove_zeros(df)
 df = dc.convert_dtypes(df)
 print('data cleaned')
 
-## Generate quality table with specified data quality dimensions
-# instantiate qc class
-qc = DataQualityCheck()
-
-# Data quality dimension
-col_names = ['market', 'product', 'source', 'start', 'end', 'timeliness', 'data_length', 'completeness', 'duplicates', 'mode_D']
-
 # All product list
 PRODUCT_LIST = df['product'].unique().tolist()
 # All market list
@@ -48,7 +41,14 @@ m = len(MARKET_LIST)*len(PRODUCT_LIST)*len(SOURCE_LIST)
 n = len(col_names)
 print(f'Anticipate qc talbe size is {m*n} entries')
 
+# prepare table for data quality dimension
+col_names = ['market', 'product', 'source', 'start', 'end', 'timeliness', 'data_length', 'completeness', 'duplicates', 'mode_D']
+
 start_time = time.time()
+## Generate quality table with specified data quality dimensions
+
+# instantiate qc class
+qc = DataQualityCheck()
 
 # initialize QC table
 QC = [[] for _ in range(m)] 
@@ -74,8 +74,6 @@ for MARKET in MARKET_LIST:
                 break
                 
             else:
-                sale = qc.remove_duplicates(sale)
-                sale = qc.remove_outliers(sale)
                 QC_i = qc.generate_QC(sale, figure_output=0)
                 QC[i] = [MARKET, PRODUCT, SOURCE] + QC_i
                 i = i+1
