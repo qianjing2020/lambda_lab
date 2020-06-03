@@ -3,8 +3,9 @@ from modules.data_preprocess import DataCleaning, DataQualityCheck
 from modules.db_connect import dbConnect
 
 # test time series
-MARKET = 'Masindi'
-PRODUCT = 'Maize'
+
+MARKET = 'Owino'
+PRODUCT = 'Dry Maize'
 SOURCE = 'EAGC-RATIN'
 
 db_c = dbConnect()

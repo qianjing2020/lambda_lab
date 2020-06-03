@@ -84,12 +84,14 @@ class DataQualityCheck:
         """remove outliers from a series"""        
         y = df.copy()
         lower_bound, upper_bound = y.quantile(.05), y.quantile(.95)
-        y = y[y.iloc[:,0].between(lower_bound[0], upper_bound[0])]
+        
+        y = y[y.iloc[:, 0].between(lower_bound[0], upper_bound[0])]
         return y
 
     def day_by_day(self, df):
         """construct time frame and create augumented time series"""
         y = df.copy()
+        
         START, END = y.index.min(), y.index.max()        
         # construct a time frame from start to end
         date_range = pd.date_range(start=START, end=END, freq='D')
@@ -103,28 +105,33 @@ class DataQualityCheck:
         Input:  y: time series with sorted time index
 
         Output: time series data quality metrics
+            start, end, timeliness, data_length, completeness, duplicates, mode_D
+
             start: start of time series
             end: end of time seires
-            timeliness: gap between the end of time seires and today, days. 
-                    0 means sampling is up to today, 30 means the most recent data was sampled 30 days ago.
+            timeliness: gap between the end of time seires and today, days. 0 means sampling is up to today, 30 means the most recent data was sampled 30 days ago.
             data_length: length of available data in terms of days
-            completeness: not NaN/total data in a complete day-by-day time frame,
-                    0 means all data are not valid, 1 means data is completed on 
+            completeness: not NaN/total data in a complete day-by-day time frame, 0 means all data are not valid, 1 means data is completed on 
             duplicates: number of data sampled on same date, 0: no duplicates, 10: 10 data were sampled on a same date
-            mode_D: the most frequent sampling interval in time series, days, 
-                this is important for determing forecast resolution
-
+            mode_D: the most frequent sampling interval in time series, days, this is important for determing forecast resolution
         """
         y = df.copy()
-        y = self.remove_duplicates(y)
-        y = self.remove_outliers(y)
-        # construct time frame and create augumented time series
+        y1 = self.remove_duplicates(y)
+        y2 = self.remove_outliers(y)
+
+        if y2.empty:
+            # special case of two datapoint, all will be considered outlier
+            y = y1
+
+        else:
+            y = y2
+            # construct time frame and create augumented time series
         START, END = y.index.min(), y.index.max()
         TIMELINESS = (datetime.now()-END).days
         
         # this is time series framed in the complete day-by-day timeframe
         y_t = self.day_by_day(y) 
-
+        
         # completeness
         L = len(y_t)
         L_nan = y_t.isnull().sum()
@@ -139,7 +146,6 @@ class DataQualityCheck:
 
         else:
             # some data exist
-
             timediff = pd.DataFrame(np.diff(y.index.values), columns=['D'])
             x = timediff['D'].value_counts()
             x.index = x.index.astype(str)

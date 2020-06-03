@@ -15,7 +15,7 @@ from db_connect import dbConnect
 from data_preprocess import DataCleaning, DataQualityCheck
 
 # User input: sale type 
-sale_type = 'retail'
+sale_type = 'wholesale'
 
 ## read data from stakeholder's database
 # instantiate db class
@@ -37,12 +37,13 @@ PRODUCT_LIST = df['product'].unique().tolist()
 MARKET_LIST = df['market'].unique().tolist()
 # All source list
 SOURCE_LIST = df['source'].unique().tolist()
-m = len(MARKET_LIST)*len(PRODUCT_LIST)*len(SOURCE_LIST)
-n = len(col_names)
-print(f'Anticipate qc talbe size is {m*n} entries')
 
 # prepare table for data quality dimension
 col_names = ['market', 'product', 'source', 'start', 'end', 'timeliness', 'data_length', 'completeness', 'duplicates', 'mode_D']
+
+m = len(MARKET_LIST)*len(PRODUCT_LIST)*len(SOURCE_LIST)
+# n = len(col_names)
+# print(f'Anticipate qc talbe size is {m*n} entries')
 
 start_time = time.time()
 ## Generate quality table with specified data quality dimensions
@@ -56,7 +57,7 @@ i = 0
 for MARKET in MARKET_LIST:
     for PRODUCT in PRODUCT_LIST:
         for SOURCE in SOURCE_LIST:
-            
+            print(MARKET, PRODUCT, SOURCE)
             # apply filters
             cond1 = (df['product']==PRODUCT)
             cond2 = (df['source']==SOURCE)
