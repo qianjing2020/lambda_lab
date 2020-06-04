@@ -120,9 +120,8 @@ class DataQualityCheck:
         y2 = self.remove_outliers(y)
 
         if y2.empty:
-            # special case of two datapoint, all will be considered outlier
+            # e.g., special case of two datapoint, all data will be considered outlier
             y = y1
-
         else:
             y = y2
             # construct time frame and create augumented time series

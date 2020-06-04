@@ -12,7 +12,7 @@ from db_connect import dbConnect
 
 # get qc table
 db_c = dbConnect()
-tablename = 'qc_retail'
+tablename = 'qc_wholesale'
 
 df = db_c.read_analytical_db(tablename=tablename)
 
@@ -55,9 +55,6 @@ df['DQI'] = D1*W1 + D2*W2 + D3*W3 + D4*W4 + D5*W5 + D6*W6
 
 df['DQI_cat']=pd.qcut(df['DQI'], [0, .25, .5, .75, 0.9, 1.], labels = [ "poor", "medium", "fair", "good", "great"])
 
-plt.subplots(figsize=(10, 7))
-sns.scatterplot('data_points', 'timeliness', hue='DQI_cat', data=df)
-plt.show()
 
 candidate = df[(df['DQI_cat']=='great') ]
 print(f'len(candidate) time series fall into "great" DQI category' )
@@ -65,5 +62,8 @@ print(candidate)
 
 # upload dataframe to DB table
 db_c.populate_analytical_db(df, tablename=tablename)
+print('AWS could database updated: added DQI in QC table. ')
 
-
+plt.subplots(figsize=(10, 7))
+sns.scatterplot('data_points', 'timeliness', hue='DQI_cat', data=df)
+plt.show()

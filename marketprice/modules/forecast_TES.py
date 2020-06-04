@@ -71,7 +71,8 @@ yt = dqc.day_by_day(sale_df[sale_type])
 # interpolate for missing values
 yi = yt.interpolate(method='nearest')
 plt.plot(yi)
-breakpoint()
+
+
 # Check data stationarity
 # plot autocorrelation function to decide lagging
 # fig = plt.figure(figsize=(11, 10))
