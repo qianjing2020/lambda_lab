@@ -9,7 +9,7 @@ from modules.data_preparation import split_sequence
 
 data = sale.to_numpy().flatten()
 
-n_steps_in, n_steps_out = 3, 2
+n_steps_in, n_steps_out = 14, 7
 
 X, y = split_sequence(data, n_steps_in, n_steps_out)
 
@@ -22,12 +22,13 @@ for i in range(len(X)):
 
 # MLP model
 MLP = Sequential()
-MLP.add(Dense(100, activation='relu', input_dim=n_steps_in))
-MLP.add(Dense(10, activation='relu'))
+MLP.add(Dense(40, activation='relu', input_dim=n_steps_in))
+MLP.add(Dense(40, activation='relu'))
+MLP.add(Dense(20, activation='relu'))
 MLP.add(Dense(n_steps_out))
-MLP.compile(optimizer='adam', loss='mse')
+MLP.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
 
-MLP.fit(X, y, epochs=2000, verbose=0)
+MLP.fit(X, y, epochs=2000, verbose=1)
 
 X_test = np.array(data[-n_steps_in:]).reshape(1, n_steps_in)
 y_hat = MLP.predict(X_test, verbose=1)
