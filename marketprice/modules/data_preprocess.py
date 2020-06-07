@@ -80,10 +80,10 @@ class DataQualityCheck:
             y = y[~rows_rm]
         return y
         
-    def remove_outliers(self, df):
+    def remove_outliers(self, df, lower=0.05, upper=0.95):
         """remove outliers from a series"""        
         y = df.copy()
-        lower_bound, upper_bound = y.quantile(.05), y.quantile(.95)
+        lower_bound, upper_bound = y.quantile(lower), y.quantile(upper)
         
         y = y[y.iloc[:, 0].between(lower_bound[0], upper_bound[0])]
         return y
