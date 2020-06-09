@@ -12,7 +12,6 @@ class ModelConfig:
                     cfg = [i, o, t]
                     configs.append(cfg)
         return configs
-
     
     def exp_smoothing_configs(seasonal=[None]): models = list()
     # define config lists

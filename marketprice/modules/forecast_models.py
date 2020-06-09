@@ -1,7 +1,6 @@
 import numpy as np
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
-
 class ForecastModels:
 	def __init__(self):
 		pass
@@ -42,8 +41,7 @@ class ForecastModels:
 	def exp_smoothing_forecast(self, history, config):
 		# one-step Holt Winter's Exponential Smoothing forecast
 		t, d, s, p, b, r = config
-		# in config: trend type, dampening type, seasonality type, seasonal period, Box-Cox transform, removal of the bias when fitting
-
+		
 		history = np.array(history)
 		model = ExponentialSmoothing(
 		    history, trend=t, damped=d, seasonal=s, seasonal_periods=p)
@@ -71,6 +69,7 @@ class ModelConfig:
         return configs
 		
     def exp_smoothing_configs(self, seasonal=[None]):
+		# in cfg: trend type, dampening type, seasonality type, seasonal period, Box-Cox transform, removal of the bias when fitting
         configs = list()
         t_params = ['add', 'mul', None]
         d_params = [True, False]
