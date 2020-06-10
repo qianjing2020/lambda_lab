@@ -12,7 +12,7 @@ from app import app
 db_c = dbConnect()
 @app.route("/") 
 def home(): 
-    return "<h1>Welcome to Sauti DS!</h1>"
+    return "<h1>Sauti East African Market Prediction. </h1>"
 
 @app.route("/qc/<tablename>", methods=('POST', 'GET'))
 def qc_tables(tablename='qc_retail'):
